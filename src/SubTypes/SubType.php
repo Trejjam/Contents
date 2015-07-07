@@ -6,8 +6,10 @@
  * Time: 16:17
  */
 
-namespace Trejjam\Utils\Contents\Items;
+namespace Trejjam\Contents\SubTypes;
 
+use Trejjam,
+	Trejjam\Contents\Items;
 
 abstract class SubType
 {
@@ -34,17 +36,17 @@ abstract class SubType
 
 	/**
 	 * Enable usage in items
-	 * @param Base $base
+	 * @param Items\Base $base
 	 * @return bool
 	 */
-	public abstract function applyOn(Base $base);
+	public abstract function applyOn(Items\Base $base);
 
 	/**
-	 * @param Base $base
+	 * @param Items\Base $base
 	 * @param      $data
 	 * @return mixed
 	 */
-	public function update(Base $base, $data)
+	public function update(Items\Base $base, $data)
 	{
 		return $data;
 	}

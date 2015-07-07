@@ -6,11 +6,12 @@
  * Time: 5:30
  */
 
-namespace Trejjam\Utils\Contents\Items;
+namespace Trejjam\Contents\Items;
 
 
 use Nette,
-	Trejjam;
+	Trejjam,
+	Trejjam\Contents;
 
 class ListContainer extends Container
 {
@@ -29,10 +30,10 @@ class ListContainer extends Container
 			: (isset($this->configuration['listItem']) ? $this->configuration['listItem'] : NULL);
 
 		if (is_null($child)) {
-			throw new Trejjam\Utils\DomainException('List has not defined child.', Trejjam\Utils\Exception::CONTENTS_INCOMPLETE_CONFIGURATION);
+			throw new Contents\DomainException('List has not defined child.', Contents\Exception::INCOMPLETE_CONFIGURATION);
 		}
 		if (!is_null($count) && !is_null($max)) {
-			throw new Trejjam\Utils\DomainException('List has defined \'count\' and \'max\' at same time.', Trejjam\Utils\Exception::CONTENTS_COLLISION_CONFIGURATION);
+			throw new Contents\DomainException('List has defined \'count\' and \'max\' at same time.', Contents\Exception::COLLISION_CONFIGURATION);
 		}
 
 		/** @var Base[] $out */
@@ -71,14 +72,14 @@ class ListContainer extends Container
 				//manually deleted item
 			}
 			else {
-				$out[$k] = Trejjam\Utils\Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], $v, $this->subTypes);
+				$out[$k] = Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], $v, $this->subTypes);
 			}
 
 			$i++;
 		}
 
 		while (!is_null($count) && $i < $count) {
-			$out[$i] = Trejjam\Utils\Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], NULL, $this->subTypes);
+			$out[$i] = Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], NULL, $this->subTypes);
 
 			$i++;
 		}
@@ -165,7 +166,7 @@ class ListContainer extends Container
 					$subTogglingObject = $togglingObject->addConditionOn($listSelect, Nette\Application\UI\Form::EQUAL, count($items) - 1);
 				}
 
-				$newListItem = Trejjam\Utils\Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], NULL, $item->subTypes);
+				$newListItem = Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], NULL, $item->subTypes);
 
 				$newListItem->generateForm($newListItem, $container, NULL, $newParent, $subTogglingObject, $userOptions);
 			});
@@ -175,7 +176,7 @@ class ListContainer extends Container
 			$deleteContainer = $container->addContainer(ListContainer::DELETE_ITEM);
 		}
 
-		$listSelect = new Trejjam\Utils\Contents\NoValidateSelectBox($this->getConfigValue('listLabel', 'list', $userOptions), NULL);
+		$listSelect = new Contents\NoValidateSelectBox($this->getConfigValue('listLabel', 'list', $userOptions), NULL);
 		$container[self::LIST_BOX] = $listSelect;
 		$listSelect->setOption('id', $parentName . self::LIST_BOX . $name);
 		if (!is_null($togglingObject)) {
@@ -264,7 +265,7 @@ class ListContainer extends Container
 					}
 				}
 
-				$this->data[$maxDataI + 1] = Trejjam\Utils\Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], NULL, $this->subTypes);
+				$this->data[$maxDataI + 1] = Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], NULL, $this->subTypes);
 				$data[$maxDataI + 1] = $newData;
 			}
 

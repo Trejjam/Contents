@@ -6,7 +6,7 @@
  * Time: 20:17
  */
 
-namespace Trejjam\Utils\Contents;
+namespace Trejjam\Contents;
 
 
 use Nette,
@@ -30,7 +30,7 @@ class Contents
 	protected $logger;
 
 	/**
-	 * @var Trejjam\Utils\Contents\Items\SubType[]
+	 * @var SubTypes\SubType[]
 	 */
 	protected $subTypes = [];
 
@@ -41,7 +41,7 @@ class Contents
 		$this->logger = $logger;
 	}
 
-	public function addSubType(Trejjam\Utils\Contents\Items\SubType $subType)
+	public function addSubType(SubTypes\SubType $subType)
 	{
 		$this->subTypes[$subType->getName()] = $subType;
 	}
@@ -66,7 +66,7 @@ class Contents
 	protected function loadConfiguration($name)
 	{
 		if (!$this->hasConfiguration($name)) {
-			throw new Trejjam\Utils\InvalidArgumentException("Configuration with name '$name' not exist.", Trejjam\Utils\Exception::CONTENTS_MISSING_CONFIGURATION);
+			throw new InvalidArgumentException("Configuration with name '$name' not exist.", Exception::MISSING_CONFIGURATION);
 		}
 
 		return Nette\Neon\Neon::decode(file_get_contents($this->getFilePath($name)));
@@ -81,7 +81,7 @@ class Contents
 				$data = Nette\Utils\Json::decode($data, Nette\Utils\Json::FORCE_ARRAY);
 			}
 			catch (Nette\Utils\JsonException $e) {
-				throw new Trejjam\Utils\LogicException('Json::decode problem', Trejjam\Utils\Exception::CONTENTS_JSON_DECODE, $e);
+				throw new LogicException('Json::decode problem', Exception::JSON_DECODE, $e);
 			}
 		}
 
@@ -99,19 +99,19 @@ class Contents
 	 * @param array       $fields
 	 * @return Nette\Application\UI\Form
 	 */
-	public function createForm(Trejjam\Utils\Contents\Items\Base $itemContainer, $userOptions = [], $contentName = NULL, array $fields = NULL)
+	public function createForm(Items\Base $itemContainer, $userOptions = [], $contentName = NULL, array $fields = NULL)
 	{
 		$form = new UI\Form;
 
 		if (is_null($fields)) {
 			$this->createFieldContainer($itemContainer, $form, $userOptions, 'root', $contentName);
 		}
-		else if ($itemContainer instanceof Trejjam\Utils\Contents\Items\Container) {
+		else if ($itemContainer instanceof Items\Container) {
 			$itemContainerChild = $itemContainer->getChild();
 
 			foreach ($fields as $v) {
 				if (!isset($itemContainerChild[$v])) {
-					throw new Trejjam\Utils\LogicException("Field '$v' not exist in given container", Trejjam\Utils\Exception::CONTENTS_CHILD_NOT_EXIST);
+					throw new LogicException("Field '$v' not exist in given container", Exception::CHILD_NOT_EXIST);
 				}
 
 				$this->createFieldContainer($itemContainerChild[$v], $form, isset($userOptions['fields']) && isset($userOptions['fields'][$v]) ? $userOptions['fields'][$v] : [], $v, $contentName);
@@ -123,7 +123,7 @@ class Contents
 		return $form;
 	}
 
-	protected function createFieldContainer(Trejjam\Utils\Contents\Items\Base $itemContainer, UI\Form &$form, $userOptions = [], $field, $contentName = NULL)
+	protected function createFieldContainer(Items\Base $itemContainer, UI\Form &$form, $userOptions = [], $field, $contentName = NULL)
 	{
 		$itemContainer->generateForm($itemContainer, $form, $field, '', NULL, $userOptions);
 
@@ -132,7 +132,7 @@ class Contents
 		};
 	}
 
-	public function proceedEditForm(UI\Form $form, Trejjam\Utils\Contents\Items\Base $itemContainer, $field, $contentName)
+	public function proceedEditForm(UI\Form $form, Items\Base $itemContainer, $field, $contentName)
 	{
 		$values = $form->getValues(TRUE);
 

@@ -6,11 +6,12 @@
  * Time: 5:30
  */
 
-namespace Trejjam\Utils\Contents\Items;
+namespace Trejjam\Contents\Items;
 
 
 use Nette,
-	Trejjam;
+	Trejjam,
+	Trejjam\Contents;
 
 class Container extends Base
 {
@@ -31,7 +32,7 @@ class Container extends Base
 	protected function sanitizeData($data, $first=false)
 	{
 		if (!isset($this->configuration['child'])) {
-			throw new Trejjam\Utils\DomainException('Container has not defined child.', Trejjam\Utils\Exception::CONTENTS_INCOMPLETE_CONFIGURATION);
+			throw new Contents\DomainException('Container has not defined child.', Contents\Exception::INCOMPLETE_CONFIGURATION);
 		}
 		$child = $this->configuration['child'];
 
@@ -43,7 +44,7 @@ class Container extends Base
 				$out[$k]->update(isset($data[$k]) ? $data[$k] : NULL);
 			}
 			else {
-				$out[$k] = Trejjam\Utils\Contents\Factory::getItemObject($v, isset($data[$k]) ? $data[$k] : NULL, $this->subTypes);
+				$out[$k] = Contents\Factory::getItemObject($v, isset($data[$k]) ? $data[$k] : NULL, $this->subTypes);
 			}
 		}
 

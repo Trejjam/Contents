@@ -1,11 +1,8 @@
 {
-	"name": "trejjam/utils",
-	"description": "Utils, labels",
+	"name": "trejjam/contents",
+	"description": "Contents",
 	"keywords": [
-		"nette",
-		"utils",
-		"labels",
-		"baseLayout"
+		"contents"
 	],
 	"license": [
 		"MIT"
@@ -17,21 +14,23 @@
 	],
 	"support": {
 		"email": "jan.trejbal@gmail.com",
-		"issues": "https://github.com/Trejjam/Utils/issues"
+		"issues": "https://github.com/Trejjam/Contents/issues"
 	},
 	"require": {
 		"php": ">=5.4",
 
-		"nette/di": "~2.3"
+		"nette/di": "~2.3",
+		"nette/forms": "~2.3",
+		"kdyby/forms-replicator": "~1.2@dev",
+
+		"trejjam/utils": "~1.2.0"
 	},
 	"require-dev": {
 		"nette/tester": "@dev",
 		"nette/bootstrap": "~2.3",
 		"nette/robot-loader": "~2.3",
 		"nette/database": "~2.3",
-
-		"nette/forms": "~2.3",
-		"kdyby/forms-replicator": "~1.2@dev",
+		"nette/utils": "~2.3",
 
 		"tracy/tracy": "~2.3",
 
@@ -42,16 +41,12 @@
 		"besanek/presenter-tester": "@dev"
 	},
 	"suggest": {
-		"nette/forms": "to use Contents",
-		"kdyby/forms-replicator": "to use Contents",
 		"tracy/tracy": "to use Contents logging",
-		"nette/database": "to use Labels",
-		"gabrielbull/browser": "to get information about browser",
 		"kdyby/console": "to use CLI configurator"
 	},
 	"autoload": {
 		"psr-4": {
-			"Trejjam\\Utils\\": "src/"
+			"Trejjam\\Contents\\": "src/"
 		},
 		"classmap": [
 			"src/exceptions.php"
@@ -59,7 +54,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "v1.0-dev"
+			"dev-master": "v1.1-dev"
 		}
 	}
 }

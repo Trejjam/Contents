@@ -6,7 +6,7 @@ use Nette,
 	Tester,
 	Tester\Assert,
 	Trejjam,
-	Trejjam\Utils\Contents,
+	Trejjam\Contents,
 	PresenterTester\PresenterTester;
 
 $container = require __DIR__ . '/bootstrap.php';
@@ -30,7 +30,7 @@ class ContentsTest extends Tester\TestCase
 
 	public function setUp()
 	{
-		$this->contents = $this->container->getService("utils.contents");
+		$this->contents = $this->container->getService("contents.contents");
 	}
 
 	function testContents1()
@@ -66,11 +66,11 @@ class ContentsTest extends Tester\TestCase
 
 		Assert::throws(function () {
 			$this->contents->getDataObject('testContent', 'abcd');
-		}, \Trejjam\Utils\LogicException::class, NULL, Trejjam\Utils\Exception::CONTENTS_JSON_DECODE);
+		}, \Trejjam\Contents\LogicException::class, NULL, Trejjam\Contents\Exception::CONTENTS_JSON_DECODE);
 
 		Assert::throws(function () {
 			$this->contents->getDataObject('notExistTestContent', 'abcd');
-		}, \Trejjam\Utils\InvalidArgumentException::class, NULL, Trejjam\Utils\Exception::CONTENTS_MISSING_CONFIGURATION);
+		}, \Trejjam\Contents\InvalidArgumentException::class, NULL, Trejjam\Contents\Exception::CONTENTS_MISSING_CONFIGURATION);
 
 		/**
 		 *
@@ -381,10 +381,6 @@ class ContentsTest extends Tester\TestCase
 	{
 		$listItem = $this->createList();
 
-		$listItem2 = clone $listItem;
-		$listItem3 = clone $listItem;
-		$listItem4 = clone $listItem;
-
 		Assert::same([0, 1], array_keys($listItem->getChild()));
 		Assert::same([
 			['name' => '', 'content' => 'abcd'],
@@ -396,7 +392,7 @@ class ContentsTest extends Tester\TestCase
 			$containerItem = Contents\Factory::getItemObject([
 				'type' => 'list',
 			], [['content' => 'abcd']]);
-		}, Trejjam\Utils\DomainException::class, NULL, Trejjam\Utils\Exception::CONTENTS_INCOMPLETE_CONFIGURATION);
+		}, Trejjam\Contents\DomainException::class, NULL, Trejjam\Contents\Exception::INCOMPLETE_CONFIGURATION);
 
 
 		/**
@@ -559,7 +555,7 @@ class ContentsTest extends Tester\TestCase
 			$this->contents->createForm($listItem3, [], 'testContent.update', [
 				'notExistKey'
 			]);
-		}, Trejjam\Utils\LogicException::class, NULL, Trejjam\Utils\Exception::CONTENTS_CHILD_NOT_EXIST);
+		}, Contents\LogicException::class, NULL, Contents\Exception::CHILD_NOT_EXIST);
 
 	}
 	function testList14()
@@ -640,7 +636,7 @@ class ContentsTest extends Tester\TestCase
 			$containerItem = Contents\Factory::getItemObject([
 				'type' => 'list',
 			], [['content' => 'abcd']]);
-		}, Trejjam\Utils\DomainException::class, NULL, Trejjam\Utils\Exception::CONTENTS_INCOMPLETE_CONFIGURATION);
+		}, Contents\DomainException::class, NULL, Contents\Exception::INCOMPLETE_CONFIGURATION);
 	}
 	function testList3()
 	{
@@ -676,7 +672,7 @@ class ContentsTest extends Tester\TestCase
 
 				],
 			], [['content' => 'abcd']]);
-		}, Trejjam\Utils\DomainException::class, NULL, Trejjam\Utils\Exception::CONTENTS_COLLISION_CONFIGURATION);
+		}, Contents\DomainException::class, NULL, Contents\Exception::COLLISION_CONFIGURATION);
 
 		/**
 		 * @var $tester        PresenterTester
@@ -738,7 +734,7 @@ class ContentsTest extends Tester\TestCase
 			$containerItem = Contents\Factory::getItemObject([
 				'type' => 'container',
 			], ['content' => 'abcd']);
-		}, Trejjam\Utils\DomainException::class, NULL, Trejjam\Utils\Exception::CONTENTS_INCOMPLETE_CONFIGURATION);
+		}, Contents\DomainException::class, NULL, Contents\Exception::INCOMPLETE_CONFIGURATION);
 	}
 	function testContainer2()
 	{
@@ -808,7 +804,7 @@ class ContentsTest extends Tester\TestCase
 
 		Assert::throws(function () {
 			Contents\Factory::getItemObject('', ['abd']);
-		}, Trejjam\Utils\InvalidArgumentException::class, NULL, Trejjam\Utils\Exception::CONTENTS_UNKNOWN_ITEM_TYPE);
+		}, Contents\InvalidArgumentException::class, NULL, Contents\Exception::UNKNOWN_ITEM_TYPE);
 
 		$tester = new PresenterTester($this->container->getByType('\Nette\Application\IPresenterFactory'));
 		$tester->setPresenter('Homepage');

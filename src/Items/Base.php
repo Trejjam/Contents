@@ -6,11 +6,12 @@
  * Time: 5:26
  */
 
-namespace Trejjam\Utils\Contents\Items;
+namespace Trejjam\Contents\Items;
 
 
 use Nette,
-	Trejjam;
+	Trejjam,
+	Trejjam\Contents\SubTypes;
 
 abstract class Base implements IEditItem
 {
@@ -28,14 +29,14 @@ abstract class Base implements IEditItem
 	protected $data;
 	protected $configuration;
 	/**
-	 * @var SubType[]
+	 * @var SubTypes\SubType[]
 	 */
 	protected $subTypes;
 
 	/**
 	 * @param            $configuration
 	 * @param null       $data
-	 * @param SubType[]  $subTypes
+	 * @param SubTypes\SubType[]  $subTypes
 	 */
 	function __construct($configuration, $data = NULL, array $subTypes = [])
 	{
@@ -54,7 +55,7 @@ abstract class Base implements IEditItem
 	}
 
 	/**
-	 * @return SubType[]
+	 * @return SubTypes\SubType[]
 	 */
 	protected function getSuitableSubTypes()
 	{
@@ -74,7 +75,7 @@ abstract class Base implements IEditItem
 	 */
 	protected function sanitizeSubTypeData($data)
 	{
-		return $this->useSubType(function (SubType $subType, $data) {
+		return $this->useSubType(function (SubTypes\SubType $subType, $data) {
 			return $subType->sanitize($data);
 		}, $data);
 	}
@@ -115,7 +116,7 @@ abstract class Base implements IEditItem
 
 	public function update($data)
 	{
-		$data = $this->useSubType(function (SubType $subType, $data) {
+		$data = $this->useSubType(function (SubTypes\SubType $subType, $data) {
 			return $subType->update($this, $data);
 		}, $data);
 

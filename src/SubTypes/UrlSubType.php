@@ -6,23 +6,33 @@
  * Time: 16:27
  */
 
-namespace Trejjam\Utils\Test;
+namespace Trejjam\Contents\SubTypes;
 
 
 use Nette,
 	Trejjam,
-	Trejjam\Utils\Contents\Items;
+	Trejjam\Contents\Items;
 
-class UrlSubType extends Items\SubType
+class UrlSubType extends SubType
 {
 	/**
 	 * @var Nette\Application\LinkGenerator
 	 */
 	protected $linkGenerator;
+	/**
+	 * @var Nette\Http\Request
+	 */
+	protected $request;
+	/**
+	 * @var Nette\Application\IRouter
+	 */
+	protected $router;
 
-	public function __construct(Nette\Application\LinkGenerator $linkGenerator)
+	public function __construct(Nette\Application\LinkGenerator $linkGenerator, Nette\Http\Request $request, Nette\Application\IRouter $router)
 	{
 		$this->linkGenerator = $linkGenerator;
+		$this->request = $request;
+		$this->router = $router;
 	}
 
 	/**
@@ -73,7 +83,7 @@ class UrlSubType extends Items\SubType
 
 	protected function getUrl($presenterString)
 	{
-		if (preg_match('~^([\w:]+):(\w*+)(#[a-zA-Z][\w:.-]*)?(?:(?:,[ ]+\{)([a-zA-Z=>\{\},: \'"]+)(?:\}))?()\z~', $presenterString, $m)) {
+		if (preg_match('~^([\w:]+):(\w*+)(#[a-zA-Z][\w:.-]*)?(?:(?:,[ ]+\{)([a-zA-Z=>\{\},:\-_ \'"]+)(?:\}))?()\z~', $presenterString, $m)) {
 			list(, $presenter, $action, $frag, $rawParameters) = $m;
 			if (strlen($frag) > 0 && $frag[0] != '#') {
 				$rawParameters = $frag;
@@ -90,15 +100,45 @@ class UrlSubType extends Items\SubType
 				$parameters = [];
 			}
 
-			//dump($m, $rawParameters, $parameters, ['a' => 'c'], Nette\Utils\Json::encode(['a' => 'c']), $this->linkGenerator->link(
-			//	(empty($presenter) ? '' : $presenter . ':') . $action . $frag, $parameters
-			//));
-
 			return $this->linkGenerator->link(
 				(empty($presenter) ? '' : $presenter . ':') . $action . $frag, $parameters
 			);
 		}
 
 		return FALSE;
+	}
+
+	public function update(Items\Base $item = NULL, $data)
+	{
+		try {
+			$actualUrl = $this->request->getUrl();
+			$urlScript = new Nette\Http\UrlScript($data);
+			$urlScript->setScriptPath($actualUrl->getScriptPath());
+			if ($urlScript->getHost() == $actualUrl->getHost()) {
+				$request = new Nette\Http\Request($urlScript);
+				$appRequest = $this->router->match($request);
+
+				if (!is_null($appRequest)) {
+					$data = $appRequest->getPresenterName();
+					$data .= ':' . $appRequest->getParameter('action');
+
+					$fragment = $urlScript->getFragment();
+					if ($fragment != '') {
+						$data .= '#' . $fragment;
+					}
+
+					$parameters = $appRequest->getParameters();
+					unset($parameters['action']);
+					if (count($parameters) > 0) {
+						$data .= ', ' . Nette\Utils\Json::encode($parameters);
+					}
+				}
+			}
+		}
+		catch (Nette\InvalidArgumentException $e) {
+
+		}
+
+		return $data;
 	}
 }

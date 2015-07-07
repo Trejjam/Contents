@@ -6,7 +6,7 @@
  * Time: 9:57
  */
 
-namespace Trejjam\Utils\Contents\Items;
+namespace Trejjam\Contents\Items;
 
 use Nette;
 

@@ -6,14 +6,14 @@
  * Time: 16:27
  */
 
-namespace Trejjam\Utils\Test;
+namespace Trejjam\Contents\SubTypes;
 
 
 use Nette,
 	Trejjam,
-	Trejjam\Utils\Contents\Items;
+	Trejjam\Contents\Items;
 
-class BoolSubType extends Items\SubType implements Items\IEditItem
+class BoolSubType extends SubType implements Items\IEditItem
 {
 	/**
 	 * Enable usage in items
@@ -30,6 +30,7 @@ class BoolSubType extends Items\SubType implements Items\IEditItem
 
 		return $use;
 	}
+
 	/**
 	 * @param mixed $data
 	 * @return mixed
@@ -43,12 +44,6 @@ class BoolSubType extends Items\SubType implements Items\IEditItem
 			return FALSE;
 		}
 	}
-
-	public function removedContent($rawData, $data)
-	{
-		return parent::removedContent($rawData, $data);
-	}
-
 
 	public function generateForm(Items\Base $item, Nette\Forms\Container &$formContainer, $name, $parentName, $togglingObject, array $userOptions = [])
 	{

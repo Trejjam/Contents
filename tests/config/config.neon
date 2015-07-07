@@ -15,16 +15,13 @@ extensions:
 	console: Kdyby\Console\DI\ConsoleExtension
 	replicator: Kdyby\Replicator\DI\ReplicatorExtension
 	utils: Trejjam\Utils\DI\UtilsExtension
+	contents: Trejjam\Contents\DI\ContentsExtension
 
-utils:
-	labels:
-		enable: true
-	contents:
-		enable: true
-		logDirectory: contents
-		subTypes:
-			url: Trejjam\Utils\Test\UrlSubType
-			bool: Trejjam\Utils\Test\BoolSubType
+contents:
+	logDirectory: contents
+	subTypes:
+		url: Trejjam\Contents\SubTypes\UrlSubType
+		bool: Trejjam\Contents\SubTypes\BoolSubType
 
 database:
 	dsn: "sqlite::memory:"

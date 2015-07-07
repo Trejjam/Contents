@@ -6,7 +6,7 @@
  * Time: 5:41
  */
 
-namespace Trejjam\Utils\Contents;
+namespace Trejjam\Contents;
 
 
 use Nette,
@@ -17,7 +17,7 @@ class Factory
 	/**
 	 * @param                                         $configuration
 	 * @param                                         $data
-	 * @param Trejjam\Utils\Contents\Items\SubType[] $subTypes
+	 * @param Trejjam\Contents\Subtypes\SubType[] $subTypes
 	 * @return Items\Base
 	 */
 	static function getItemObject($configuration, $data, array $subTypes = [])
@@ -45,7 +45,7 @@ class Factory
 				break;
 
 			default:
-				throw new Trejjam\Utils\InvalidArgumentException("Unknown item type '$type'.", Trejjam\Utils\Exception::CONTENTS_UNKNOWN_ITEM_TYPE);
+				throw new Trejjam\Contents\InvalidArgumentException("Unknown item type '$type'.", Trejjam\Contents\Exception::UNKNOWN_ITEM_TYPE);
 		}
 
 		return $out;

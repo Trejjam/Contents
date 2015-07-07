@@ -6,11 +6,12 @@
  * Time: 5:30
  */
 
-namespace Trejjam\Utils\Contents\Items;
+namespace Trejjam\Contents\Items;
 
 
 use Nette,
-	Trejjam;
+	Trejjam,
+	Trejjam\Contents\SubTypes;
 
 class Text extends Base
 {
@@ -52,7 +53,7 @@ class Text extends Base
 	{
 		$out = $this->rawData !== $this->data ? $this->rawData : NULL;
 
-		list(, , $out) = $this->useSubType(function (SubType $subtype, array $inData) {
+		list(, , $out) = $this->useSubType(function (SubTypes\SubType $subtype, array $inData) {
 			list($data, $rawData, $previous) = $inData;
 
 			$out = [
@@ -89,7 +90,7 @@ class Text extends Base
 	 */
 	public function generateForm(Base $item, Nette\Forms\Container &$formContainer, $name, $parentName, $togglingObject, array $userOptions = [])
 	{
-		$addFormItem = $this->useSubType(function (SubType $subType, $addFormItem) use ($formContainer, $name, $parentName, $togglingObject, $userOptions) {
+		$addFormItem = $this->useSubType(function (SubTypes\SubType $subType, $addFormItem) use ($formContainer, $name, $parentName, $togglingObject, $userOptions) {
 			if ($subType instanceof IEditItem) {
 				$subType->generateForm($this, $formContainer, $name, $parentName, $togglingObject, $userOptions);
 

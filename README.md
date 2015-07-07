@@ -17,7 +17,7 @@ Configuration
 .neon
 ```yml
 extensions:
-	contents: Trejjam\Contents\DI\UtilsExtension
+	contents: Trejjam\Contents\DI\ContentsExtension
 
 contents:
 	configurationDirectory: '%appDir%/config/contents'

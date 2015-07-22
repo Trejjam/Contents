@@ -83,7 +83,7 @@ class UrlSubType extends SubType
 
 	protected function getUrl($presenterString)
 	{
-		if (preg_match('~^([\w:]+):(\w*+)(#[a-zA-Z][\w:.-]*)?(?:(?:,[ ]+\{)([a-zA-Z=>\{\},:\-_ \'"]+)(?:\}))?()\z~', $presenterString, $m)) {
+		if (preg_match('~^([\w:]+):(\w*+)(#[a-zA-Z][\w:.-]*)?(?:(?:,[ ]+\{)([a-zA-Z0-9=>\{\},.:\-_ \'"]+)(?:\}))?()\z~', $presenterString, $m)) {
 			list(, $presenter, $action, $frag, $rawParameters) = $m;
 			if (strlen($frag) > 0 && $frag[0] != '#') {
 				$rawParameters = $frag;

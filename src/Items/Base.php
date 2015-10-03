@@ -34,9 +34,9 @@ abstract class Base implements IEditItem
 	protected $subTypes;
 
 	/**
-	 * @param            $configuration
-	 * @param null       $data
-	 * @param SubTypes\SubType[]  $subTypes
+	 * @param                    $configuration
+	 * @param null               $data
+	 * @param SubTypes\SubType[] $subTypes
 	 */
 	function __construct($configuration, $data = NULL, array $subTypes = [])
 	{
@@ -107,9 +107,13 @@ abstract class Base implements IEditItem
 	public function applyUserOptions($control, array $options)
 	{
 		$class = isset($options['class']) ? $options['class'] : NULL;
+		$label = isset($options['label']) ? $options['label'] : NULL;
 
 		if (!is_null($class)) {
 			$control->setAttribute('class', $class);
+		}
+		if (!is_null($label)) {
+			$control->caption = $label;
 		}
 		//$this->setRules($input, $validate);
 	}

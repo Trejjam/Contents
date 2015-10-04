@@ -124,7 +124,9 @@ abstract class Base implements IEditItem
 			return $subType->update($this, $data);
 		}, $data);
 
-		$this->isUpdated = $this->rawData !== $data;
+		$this->isUpdated = is_scalar($this->rawData) && is_scalar($data)
+			? $this->rawData != $data
+			: $this->rawData !== $data;
 
 		$this->rawData = $data;
 

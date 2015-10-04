@@ -374,6 +374,7 @@ class ContentsTest extends Tester\TestCase
 		], [
 			['content' => 'abcd'],
 			['content' => 'abcd', 'name' => 'abcdef'],
+			['content' => 'abcd', 'name' => 1],
 		]);
 	}
 
@@ -381,10 +382,11 @@ class ContentsTest extends Tester\TestCase
 	{
 		$listItem = $this->createList();
 
-		Assert::same([0, 1], array_keys($listItem->getChild()));
+		Assert::same([0, 1, 2], array_keys($listItem->getChild()));
 		Assert::same([
 			['name' => '', 'content' => 'abcd'],
 			['name' => 'abcdef', 'content' => 'abcd'],
+			['name' => 1, 'content' => 'abcd'],
 		], $listItem->getContent());
 
 		Assert::throws(function () {
@@ -408,6 +410,7 @@ class ContentsTest extends Tester\TestCase
 		$form->setValues([
 			'root' => [
 				['name' => 'new_value', 'content' => 'new_value2'],
+				2 => ['name' => '1', 'content' => 'abcd'],
 			],
 		]);
 		$form->onSuccess($form);
@@ -428,10 +431,12 @@ class ContentsTest extends Tester\TestCase
 		Assert::same([
 			['name' => 'new_value', 'content' => 'new_value2',],
 			['name' => 'abcdef', 'content' => 'abcd'],
+			['name' => '1', 'content' => 'abcd'],
 		], $listItem->getRawContent());
 		Assert::same([
 			['name' => 'new_value', 'content' => 'new_value2',],
 			['name' => 'abcdef', 'content' => 'abcd'],
+			['name' => '1', 'content' => 'abcd'],
 		], $listItem->getContent());
 
 		Assert::same([
@@ -473,7 +478,7 @@ class ContentsTest extends Tester\TestCase
 		Assert::true($form2Dom->has('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'1\']'));
 		Assert::same('abcdef', (string)$form2Dom->find('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'1\']')[0]);
 		Assert::true($form2Dom->has('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'2\']'));
-		Assert::same(Contents\Items\ListContainer::NEW_ITEM_BUTTON_LABEL, (string)$form2Dom->find('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'2\']')[0]);
+		Assert::same(Contents\Items\ListContainer::NEW_ITEM_BUTTON_LABEL, (string)$form2Dom->find('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'3\']')[0]);
 
 		$form2->setValues([
 			'root' => [
@@ -490,6 +495,7 @@ class ContentsTest extends Tester\TestCase
 		Assert::same([
 			['name' => '', 'content' => 'abcd',],
 			['name' => 'abcdef', 'content' => 'abcd'],
+			['name' => 1, 'content' => 'abcd'],
 		], $listItem2->getContent());
 
 		$form2->onSuccess($form2);
@@ -497,12 +503,13 @@ class ContentsTest extends Tester\TestCase
 		Assert::same([
 			['name' => '', 'content' => 'abcd',],
 			['name' => 'abcdef', 'content' => 'abcd'],
+			['name' => 1, 'content' => 'abcd'],
 			['name' => 'new_item_name', 'content' => 'new_item_content'],
 		], $listItem2->getContent());
 
 		Assert::same([
 			['name' => Contents\Items\Base::EMPTY_VALUE],
-			2 => ['name' => Contents\Items\Base::EMPTY_VALUE, 'content' => Contents\Items\Base::EMPTY_VALUE],
+			3 => ['name' => Contents\Items\Base::EMPTY_VALUE, 'content' => Contents\Items\Base::EMPTY_VALUE],
 		], $listItem2->getUpdated());
 
 		$form22 = $this->contents->createForm($listItem2, [], 'testContent.update');
@@ -521,7 +528,7 @@ class ContentsTest extends Tester\TestCase
 		Assert::true($form22Dom->has('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'1\']'));
 		Assert::same('abcdef', (string)$form2Dom->find('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'1\']')[0]);
 		Assert::true($form22Dom->has('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'2\']'));
-		Assert::same(Contents\Items\ListContainer::NEW_ITEM_BUTTON_LABEL, (string)$form2Dom->find('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'2\']')[0]);
+		Assert::same(Contents\Items\ListContainer::NEW_ITEM_BUTTON_LABEL, (string)$form2Dom->find('form select[name=\'root[' . Contents\Items\ListContainer::LIST_BOX . ']\'] option[value=\'3\']')[0]);
 
 	}
 	function testList13()
@@ -597,9 +604,11 @@ class ContentsTest extends Tester\TestCase
 
 		Assert::same([
 			['name' => '', 'content' => 'abcd'],
+			2 => ['name' => 1, 'content' => 'abcd'],
 		], $listItem4->getRawContent());
 		Assert::same([
 			['name' => '', 'content' => 'abcd'],
+			2 => ['name' => 1, 'content' => 'abcd'],
 		], $listItem4->getContent());
 		Assert::same([
 			1 => ['name' => 'abcdef', 'content' => 'abcd'],

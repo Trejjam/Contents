@@ -1,6 +1,7 @@
 Contents
 =====
 
+[![Latest stable](https://img.shields.io/packagist/v/trejjam/contents.svg)](https://packagist.org/packages/trejjam/contents)
 
 Installation
 ------------

@@ -87,18 +87,24 @@ class Text extends Base
 	 * @param                                  $parentName
 	 * @param Nette\Forms\Rules                $togglingObject
 	 * @param array                            $userOptions
+	 * @param bool                             $processSubTypes
 	 */
-	public function generateForm(Base $item, Nette\Forms\Container &$formContainer, $name, $parentName, $togglingObject, array $userOptions = [])
+	public function generateForm(Base $item, Nette\Forms\Container &$formContainer, $name, $parentName, $togglingObject, array $userOptions = [], $processSubTypes = TRUE)
 	{
-		$addFormItem = $this->useSubType(function (SubTypes\SubType $subType, $addFormItem) use ($formContainer, $name, $parentName, $togglingObject, $userOptions) {
-			if ($subType instanceof IEditItem) {
-				$subType->generateForm($this, $formContainer, $name, $parentName, $togglingObject, $userOptions);
+		if ($processSubTypes) {
+			$addFormItem = $this->useSubType(function (SubTypes\SubType $subType, $addFormItem) use ($formContainer, $name, $parentName, $togglingObject, $userOptions) {
+				if ($subType instanceof IEditItem) {
+					$subType->generateForm($this, $formContainer, $name, $parentName, $togglingObject, $userOptions);
 
-				return FALSE;
-			}
+					return FALSE;
+				}
 
-			return $addFormItem;
-		}, TRUE);
+				return $addFormItem;
+			}, TRUE);
+		}
+		else {
+			$addFormItem = TRUE;
+		}
 
 		if ($addFormItem) {
 			$input = $formContainer->addText($name, $name);

@@ -33,6 +33,8 @@ abstract class Base implements IEditItem
 	 */
 	protected $subTypes;
 
+	protected $useDefaultSanitize = TRUE;
+
 	/**
 	 * @param                    $configuration
 	 * @param null               $data
@@ -44,13 +46,17 @@ abstract class Base implements IEditItem
 		$this->rawData = $data;
 		$this->subTypes = $subTypes;
 
+		list($this->useDefaultSanitize) = $this->useDefaultSanitize($data, $configuration);
+
 		$this->init(TRUE);
 	}
 
 	protected function init($first = FALSE)
 	{
 		$this->data = $this->sanitizeSubTypeData(
-			$this->sanitizeData($this->rawData, $first)
+			$this->useDefaultSanitize
+				? $this->sanitizeData($this->rawData, $first)
+				: $this->rawData
 		);
 	}
 
@@ -69,6 +75,22 @@ abstract class Base implements IEditItem
 
 		return $out;
 	}
+
+	/**
+	 * @param mixed $data
+	 * @return mixed
+	 */
+	protected function useDefaultSanitize($data, $configuration)
+	{
+		return $this->useSubType(function (SubTypes\SubType $subType, $data) {
+			return call_user_func_array([$subType, 'useDefaultSanitize'], $data);
+		}, [
+			TRUE, //default value
+			$data,
+			$configuration,
+		]);
+	}
+
 	/**
 	 * @param mixed $data
 	 * @return mixed
@@ -80,6 +102,11 @@ abstract class Base implements IEditItem
 		}, $data);
 	}
 
+	/**
+	 * @param callable                 $callback
+	 * @param null|string|array|object $previous Value go's thought all enabled subType
+	 * @return null|string|array|object
+	 */
 	public function useSubType(callable $callback, $previous = NULL)
 	{
 		if (isset($this->configuration['subType'])) {

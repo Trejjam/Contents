@@ -43,7 +43,7 @@ abstract class SubType
 
 	/**
 	 * @param Items\Base $base
-	 * @param      $data
+	 * @param            $data
 	 * @return mixed
 	 */
 	public function update(Items\Base $base, $data)
@@ -56,6 +56,19 @@ abstract class SubType
 	 * @return mixed
 	 */
 	public abstract function sanitize($data);
+
+	/**
+	 * @param mixed $data
+	 * @return mixed
+	 */
+	public function useDefaultSanitize($defaultValue, $data, $configuration)
+	{
+		return [
+			$defaultValue,
+			$data,
+			$configuration,
+		];
+	}
 
 	/**
 	 * @param $rawData

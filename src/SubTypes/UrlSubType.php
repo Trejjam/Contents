@@ -100,9 +100,14 @@ class UrlSubType extends SubType
 				$parameters = [];
 			}
 
-			return $this->linkGenerator->link(
-				(empty($presenter) ? '' : $presenter . ':') . $action . $frag, $parameters
-			);
+			try {
+				return $this->linkGenerator->link(
+					(empty($presenter) ? '' : $presenter . ':') . $action . $frag, $parameters
+				);
+			}
+			catch (Nette\Application\UI\InvalidLinkException $e) {
+				return '#' . (empty($presenter) ? '' : $presenter . ':') . $action . $frag . (count($parameters) > 0 ? '?' : '') . join('&', $parameters);
+			}
 		}
 
 		return FALSE;

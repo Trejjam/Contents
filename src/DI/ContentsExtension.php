@@ -34,20 +34,24 @@ class ContentsExtension extends Nette\DI\CompilerExtension
 			$config['configurationDirectory'],
 			$config['logDirectory'],
 		];
-		if (!is_null($config['logDirectory'])) {
+		if ( !is_null($config['logDirectory'])) {
 			$contentsArguments[2] = '@tracy.logger';
 		}
 
-		$contents = $builder->addDefinition($this->prefix('contents'))
-							->setClass('Trejjam\Contents\Contents')
-							->setArguments($contentsArguments);
+		$builder->addDefinition($this->prefix('contents'))
+				->setClass('Trejjam\Contents\Contents')
+				->setArguments($contentsArguments);
 
 		foreach ($config['subTypes'] as $subTypeName => $subType) {
 			$def = $builder->addDefinition($this->prefix('contents.' . md5(Nette\Utils\Json::encode($subType))));
 			$def->addSetup('setName', [$subTypeName]);
-			list($def->factory) = Nette\DI\Compiler::filterArguments([
-				is_string($subType) ? new Nette\DI\Statement($subType) : $subType
-			]);
+			$def->setFactory(
+				Nette\DI\Compiler::filterArguments(
+					[
+						is_string($subType) ? new Nette\DI\Statement($subType) : $subType,
+					]
+				)[0]
+			);
 			$def->setAutowired(FALSE);
 			$def->setInject(FALSE);
 			$def->addTag(self::TAG_CONTENTS_SUBTYPES);
@@ -57,7 +61,6 @@ class ContentsExtension extends Nette\DI\CompilerExtension
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
 
 		$contents = $builder->getDefinition($this->prefix('contents'));
 		foreach (array_keys($builder->findByTag(self::TAG_CONTENTS_SUBTYPES)) as $serviceName) {

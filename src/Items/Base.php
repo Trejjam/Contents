@@ -8,10 +8,9 @@
 
 namespace Trejjam\Contents\Items;
 
-
-use Nette,
-	Trejjam,
-	Trejjam\Contents\SubTypes;
+use Nette;
+use Trejjam;
+use Trejjam\Contents\SubTypes;
 
 abstract class Base implements IEditItem
 {
@@ -26,6 +25,7 @@ abstract class Base implements IEditItem
 	protected $isUpdated  = FALSE;
 	protected $updated    = NULL;
 	protected $rawData;
+	protected $rawDataForHash;
 	protected $data;
 	protected $configuration;
 	/**
@@ -44,11 +44,20 @@ abstract class Base implements IEditItem
 	{
 		$this->configuration = $configuration;
 		$this->rawData = $data;
+		$this->rawDataForHash = $data;
 		$this->subTypes = $subTypes;
 
 		list($this->useDefaultSanitize) = $this->useDefaultSanitize($data, $configuration);
 
 		$this->init(TRUE);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRawDataHash()
+	{
+		return md5(Nette\Utils\Json::encode($this->rawDataForHash));
 	}
 
 	protected function init($first = FALSE)
@@ -78,6 +87,7 @@ abstract class Base implements IEditItem
 
 	/**
 	 * @param mixed $data
+	 *
 	 * @return mixed
 	 */
 	protected function useDefaultSanitize($data, $configuration)
@@ -85,14 +95,16 @@ abstract class Base implements IEditItem
 		return $this->useSubType(function (SubTypes\SubType $subType, $data) {
 			return call_user_func_array([$subType, 'useDefaultSanitize'], $data);
 		}, [
-			TRUE, //default value
-			$data,
-			$configuration,
-		]);
+			   TRUE, //default value
+			   $data,
+			   $configuration,
+		   ]
+		);
 	}
 
 	/**
 	 * @param mixed $data
+	 *
 	 * @return mixed
 	 */
 	protected function sanitizeSubTypeData($data)
@@ -105,6 +117,7 @@ abstract class Base implements IEditItem
 	/**
 	 * @param callable                 $callback
 	 * @param null|string|array|object $previous Value go's thought all enabled subType
+	 *
 	 * @return null|string|array|object
 	 */
 	public function useSubType(callable $callback, $previous = NULL)
@@ -123,8 +136,11 @@ abstract class Base implements IEditItem
 	}
 
 	abstract protected function sanitizeData($data);
+
 	abstract public function getContent($forceObject = FALSE);
+
 	abstract public function getRawContent($forceObject = FALSE);
+
 	abstract public function getRemovedItems();
 
 	/**
@@ -136,10 +152,10 @@ abstract class Base implements IEditItem
 		$class = isset($options['class']) ? $options['class'] : NULL;
 		$label = isset($options['label']) ? $options['label'] : NULL;
 
-		if (!is_null($class)) {
+		if ( !is_null($class)) {
 			$control->setAttribute('class', $class);
 		}
-		if (!is_null($label)) {
+		if ( !is_null($label)) {
 			$control->caption = $label;
 		}
 		//$this->setRules($input, $validate);

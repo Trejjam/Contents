@@ -17,8 +17,10 @@ class Factory
 	/**
 	 * @param                                         $configuration
 	 * @param                                         $data
-	 * @param Trejjam\Contents\Subtypes\SubType[] $subTypes
+	 * @param Trejjam\Contents\Subtypes\SubType[]     $subTypes
+	 *
 	 * @return Items\Base
+	 * @throws InvalidArgumentException
 	 */
 	static function getItemObject($configuration, $data, array $subTypes = [])
 	{

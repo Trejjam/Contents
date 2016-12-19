@@ -8,11 +8,10 @@
 
 namespace Trejjam\Contents;
 
-
-use Nette,
-	Nette\Application\UI,
-	Tracy,
-	Trejjam;
+use Nette;
+use Nette\Application\UI;
+use Tracy;
+use Trejjam;
 
 class Contents
 {
@@ -50,6 +49,7 @@ class Contents
 	{
 		return $this->configurationDirectory . '/' . $name . '.neon';
 	}
+
 	/**
 	 * @param $name
 	 * @return bool
@@ -61,7 +61,9 @@ class Contents
 
 	/**
 	 * @param $name
+	 *
 	 * @return array
+	 * @throws InvalidArgumentException
 	 */
 	protected function loadConfiguration($name)
 	{
@@ -97,7 +99,9 @@ class Contents
 	 * @param array       $userOptions
 	 * @param null|string $contentName
 	 * @param array       $fields
-	 * @return Nette\Application\UI\Form
+	 *
+	 * @return UI\Form
+	 * @throws LogicException
 	 */
 	public function createForm(Items\Base $itemContainer, $userOptions = [], $contentName = NULL, array $fields = NULL)
 	{

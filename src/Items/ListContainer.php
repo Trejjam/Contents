@@ -32,7 +32,7 @@ class ListContainer extends Container
 		if (is_null($child)) {
 			throw new Contents\DomainException('List has not defined child.', Contents\Exception::INCOMPLETE_CONFIGURATION);
 		}
-		if (!is_null($count) && !is_null($max)) {
+		if ( !is_null($count) && !is_null($max)) {
 			throw new Contents\DomainException('List has defined \'count\' and \'max\' at same time.', Contents\Exception::COLLISION_CONFIGURATION);
 		}
 
@@ -44,7 +44,7 @@ class ListContainer extends Container
 
 			$dataNew = [];
 			foreach ($data as $k => $v) {
-				if (!is_numeric($k)) {
+				if ( !is_numeric($k)) {
 					$this->removedData[$k] = $v;
 					continue;
 				}
@@ -57,8 +57,8 @@ class ListContainer extends Container
 		foreach (is_null($data) ? [] : $data as $k => $v) {
 			if (
 				!is_numeric($k) ||
-				(!is_null($count) && $i >= $count) ||
-				(!is_null($max) && $i >= $max)
+				( !is_null($count) && $i >= $count) ||
+				( !is_null($max) && $i >= $max)
 			) {
 				$this->removedData[$k] = $v;
 				continue;
@@ -78,7 +78,7 @@ class ListContainer extends Container
 			$i++;
 		}
 
-		while (!is_null($count) && $i < $count) {
+		while ( !is_null($count) && $i < $count) {
 			$out[$i] = Contents\Factory::getItemObject(['type' => 'container', 'child' => $child], NULL, $this->subTypes);
 
 			$i++;
@@ -89,7 +89,7 @@ class ListContainer extends Container
 
 	public function getRemovedItems()
 	{
-		if (!is_array($this->rawData)) {
+		if ( !is_array($this->rawData)) {
 			return $this->rawData;
 		}
 		else {
@@ -102,7 +102,7 @@ class ListContainer extends Container
 
 				$tempSubRemoved = $v->getRemovedItems();
 
-				if (!is_null($tempSubRemoved) && (!is_array($tempSubRemoved) || count($tempSubRemoved) > 0)) {
+				if ( !is_null($tempSubRemoved) && ( !is_array($tempSubRemoved) || count($tempSubRemoved) > 0)) {
 					$out[$k] = $tempSubRemoved;
 				}
 			}
@@ -128,7 +128,7 @@ class ListContainer extends Container
 		$container = $formContainer->addContainer($name);
 
 		$newParent = NULL;
-		if (!isset($item->configuration['count']) && (!isset($item->configuration['max']) || $item->configuration['max'] > count($item->getChild()))) {
+		if ( !isset($item->configuration['count']) && ( !isset($item->configuration['max']) || $item->configuration['max'] > count($item->getChild()))) {
 			$newParent = $parentName . '__' . $name . Base::NEW_CONTAINER;
 
 			$new = $container->addSubmit(Base::NEW_ITEM_BUTTON, $this->getConfigValue('addItemLabel', 'new', $userOptions));
@@ -172,18 +172,20 @@ class ListContainer extends Container
 			});
 		}
 
-		if (!isset($item->configuration['count'])) {
+		if ( !isset($item->configuration['count'])) {
 			$deleteContainer = $container->addContainer(ListContainer::DELETE_ITEM);
 		}
 
 		$listSelect = new Contents\NoValidateSelectBox($this->getConfigValue('listLabel', 'list', $userOptions), NULL);
 		$container[self::LIST_BOX] = $listSelect;
+		$listSelect->setTranslator(NULL);
+
 		$listSelect->setOption('id', $parentName . self::LIST_BOX . $name);
-		if (!is_null($togglingObject)) {
+		if ( !is_null($togglingObject)) {
 			$togglingObject->toggle($listSelect->getOption('id'));
-			if (!is_null($newParent)) {
+			if ( !is_null($newParent)) {
 				$togglingObject->toggle($newParent . Base::NEW_ITEM_BUTTON);
-		}
+			}
 		}
 
 		$items = [];
@@ -200,7 +202,7 @@ class ListContainer extends Container
 				$subTogglingObject = $togglingObject->addConditionOn($listSelect, Nette\Application\UI\Form::EQUAL, $childName);
 			}
 
-			if (!isset($item->configuration['count'])) {
+			if ( !isset($item->configuration['count'])) {
 				$removeButton = $deleteContainer->addCheckbox($childName, $this->getConfigValue('deleteLabel', 'remove item', $userOptions));
 				$removeButton->setOption('id', $parentName . '__' . $name . ListContainer::DELETE_ITEM . $childName);
 				$subTogglingObject->toggle($removeButton->getOption('id'));

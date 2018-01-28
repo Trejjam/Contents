@@ -16,33 +16,25 @@
 		"email": "jan.trejbal@gmail.com",
 		"issues": "https://github.com/Trejjam/Contents/issues"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "git@github.com:Trejjam/PresenterTester.git"
-		}
-	],
 	"require": {
 		"php": ">=7.1",
 
-		"nette/di": "~2.3",
-		"nette/forms": "~2.3",
+		"nette/di": "~2.4 | ~3.0",
+		"nette/forms": "~2.4",
 		"kdyby/forms-replicator": "~1.2@dev",
 
-		"trejjam/utils": "~1.2"
+		"trejjam/utils": "~1.5"
 	},
 	"require-dev": {
 		"nette/tester": "@dev",
 		"nette/bootstrap": "~2.3",
-		"nette/robot-loader": "~2.3",
+		"nette/robot-loader": "~2.3 | ~3.0",
 		"nette/database": "~2.3",
 		"nette/utils": "~2.3",
 
-		"tracy/tracy": "^2.3",
+		"tracy/tracy": "~2.3",
 
-		"kdyby/console": "^2.4",
-
-		"besanek/presenter-tester": "@dev"
+		"kdyby/console": "~2.4"
 	},
 	"suggest": {
 		"tracy/tracy": "to use Contents logging",

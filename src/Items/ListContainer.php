@@ -217,16 +217,13 @@ class ListContainer extends Container
 				isset($userOptions['child']) && is_array($userOptions['child']) ? ['child' => $userOptions['child']] : []
 			);
 
-			try {
-				$itemName = is_null($listHead) ? $childName : Trejjam\Utils\Utils::getValue($child->getContent(), $listHead);
+			$childContent = $child->getContent(FALSE);
+
+			if (is_null($listHead)) {
+				$itemName = $childName;
 			}
-			catch (Trejjam\Utils\LogicException $e) {
-				if ($e->getCode() & Trejjam\Utils\Exception::UTILS_KEY_NOT_FOUND) {
-					$itemName = $childName;
-				}
-				else {
-					throw $e;
-				}
+			else if (array_key_exists($listHead, $childContent)) {
+				$itemName = $childContent[$listHead];
 			}
 
 			if (empty($itemName)) {

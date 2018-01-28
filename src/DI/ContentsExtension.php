@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Trejjam\Contents\DI;
 
 use Nette;
-use Trejjam\Utils\Contents\Contents;
 
 class ContentsExtension extends Nette\DI\CompilerExtension
 {

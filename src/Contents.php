@@ -52,6 +52,7 @@ class Contents
 
 	/**
 	 * @param $name
+	 *
 	 * @return bool
 	 */
 	protected function hasConfiguration($name)
@@ -67,7 +68,7 @@ class Contents
 	 */
 	protected function loadConfiguration($name)
 	{
-		if (!$this->hasConfiguration($name)) {
+		if ( !$this->hasConfiguration($name)) {
 			throw new InvalidArgumentException("Configuration with name '$name' not exist.", Exception::MISSING_CONFIGURATION);
 		}
 
@@ -78,7 +79,7 @@ class Contents
 	{
 		$configuration = $this->loadConfiguration($name);
 
-		if (!is_array($data) && !is_object($data)) {
+		if ( !is_array($data) && !is_object($data)) {
 			try {
 				$data = Nette\Utils\Json::decode($data, Nette\Utils\Json::FORCE_ARRAY);
 			}
@@ -114,7 +115,7 @@ class Contents
 			$itemContainerChild = $itemContainer->getChild();
 
 			foreach ($fields as $v) {
-				if (!isset($itemContainerChild[$v])) {
+				if ( !isset($itemContainerChild[$v])) {
 					throw new LogicException("Field '$v' not exist in given container", Exception::CHILD_NOT_EXIST);
 				}
 
@@ -142,14 +143,18 @@ class Contents
 
 		$itemContainer->update($values[$field]);
 
-		$this->logObject($itemContainer->getUpdated(), $contentName);
+		$updated = $itemContainer->getUpdated();
+
+		if ( !is_null($updated)) {
+			$this->logObject($itemContainer->getUpdated(), $contentName);
+		}
 
 		return TRUE;
 	}
 
 	protected function logObject($object, $fileName = NULL)
 	{
-		if (!is_null($this->logDirectory) && !is_null($this->logger) && ((!is_array($object) && $object != '') || count($object) > 0)) {
+		if ( !is_null($this->logDirectory) && !is_null($this->logger) && (( !is_array($object) && $object != '') || count($object) > 0)) {
 			@mkdir($this->logger->directory . '/' . $this->logDirectory . '/', 0770);
 			@chmod($this->logger->directory . '/' . $this->logDirectory . '/', 0770);
 			$fileName = is_null($fileName) ? __CLASS__ : str_replace('/', '__', $fileName);
